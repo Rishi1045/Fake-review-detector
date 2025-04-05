@@ -6,8 +6,10 @@ This application integrates web scraping with AI-based fake review detection to 
 
 - Scrapes product reviews from e-commerce websites (Currently supports Flipkart)
 - Uses machine learning to detect and filter out fake reviews
+- Does Sentimental Analysis
 - Displays only authentic reviews with ratings and details
 - Simple and intuitive user interface
+  
 
 ## Setup Instructions
 
@@ -66,4 +68,13 @@ This application integrates web scraping with AI-based fake review detection to 
 
 - Currently best supports Flipkart product pages
 - Limited support for other e-commerce platforms
-- Web scraping is dependent on the website's HTML structure and may break if the site changes 
+- Web scraping is dependent on the website's HTML structure and may break if the site changes
+
+## Demo
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 51 AM" src="https://github.com/user-attachments/assets/afbbeace-0467-4d7d-8876-a3f1c6f3894e" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 36 AM" src="https://github.com/user-attachments/assets/9fc60d9a-d246-4938-ba9a-df63dcdf454c" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 17 AM" src="https://github.com/user-attachments/assets/c7f4f2ae-0a22-415f-9219-5f7030b470dc" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 02 AM" src="https://github.com/user-attachments/assets/1e13392a-c5dd-494e-a207-511e5b9b56d4" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 44 45 AM" src="https://github.com/user-attachments/assets/f1ce6fd7-5712-4bba-8266-a85a83a4e445" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 42 29 AM" src="https://github.com/user-attachments/assets/85c75545-5d7a-4998-ba30-08054a65ca0b" />
