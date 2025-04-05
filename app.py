@@ -172,6 +172,28 @@ def analyze():
             # Prepare rating distribution data for frontend
             rating_distribution = []
             
+            # If we have numeric ratings but total_ratings is 0, 
+            # recalculate the rating_counts based on numeric_ratings
+            if numeric_ratings and total_ratings == 0:
+                print("Recalculating rating counts from numeric ratings...")
+                # Reset the rating counts
+                rating_counts = {
+                    "5": 0,
+                    "4": 0,
+                    "3": 0,
+                    "2": 0,
+                    "1": 0
+                }
+                
+                # Count ratings from the numeric_ratings list
+                for rating in numeric_ratings:
+                    rating_key = str(int(rating))
+                    if rating_key in rating_counts:
+                        rating_counts[rating_key] += 1
+                        total_ratings += 1
+                
+                print(f"Recalculated rating counts: {rating_counts}, total: {total_ratings}")
+            
             # First, count how many reviews we actually have for each rating
             for rating in ["5", "4", "3", "2", "1"]:
                 count = rating_counts[rating]
