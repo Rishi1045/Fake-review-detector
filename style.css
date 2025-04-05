@@ -1017,3 +1017,328 @@ section {
         width: 0 !important;
     }
 }
+
+/* Theme toggle button */
+.theme-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.theme-toggle-btn:hover {
+    color: var(--primary-color);
+    transform: rotate(20deg);
+}
+
+/* Light theme variables */
+body.light-theme {
+    --bg-color: #f5f7fa;
+    --secondary-bg: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --text-color: #333333;
+    --text-muted: #666666;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .navbar,
+body.light-theme .footer {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .mobile-menu {
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* Advanced Visualization Section */
+.advanced-visualization {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-container {
+    height: 250px;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+/* Sentiment Analysis Styles */
+.sentiment-summary {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sentiment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.sentiment-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.sentiment-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.sentiment-item.positive .sentiment-icon {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.sentiment-item.neutral .sentiment-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
+}
+
+.sentiment-item.negative .sentiment-icon {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+}
+
+.sentiment-info {
+    flex: 1;
+}
+
+.sentiment-info h4 {
+    margin: 0 0 0.5rem;
+    color: #fff;
+}
+
+.sentiment-bar-container {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.sentiment-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.positive-bar {
+    background-color: #4CAF50;
+}
+
+.neutral-bar {
+    background-color: #FFC107;
+}
+
+.negative-bar {
+    background-color: #F44336;
+}
+
+.sentiment-percentage {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Review Filter Styles */
+.review-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 1rem;
+}
+
+.filter-label {
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.filter-search {
+    margin-left: auto;
+    position: relative;
+}
+
+.filter-search input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    width: 200px;
+    transition: var(--transition);
+}
+
+.filter-search input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    width: 240px;
+}
+
+.filter-search i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+/* Export Options */
+.export-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.export-btn, .share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.875rem;
+}
+
+.export-btn:hover, .share-btn:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.share-btn {
+    margin-left: auto;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.share-btn:hover {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+/* Mobile adjustments for new UI elements */
+@media (max-width: 768px) {
+    .sentiment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .filter-search {
+        margin-left: 0;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .filter-search input {
+        width: 100%;
+    }
+    
+    .filter-search input:focus {
+        width: 100%;
+    }
+    
+    .export-options {
+        justify-content: center;
+    }
+    
+    .share-btn {
+        margin-left: 0;
+    }
+}
+
+/* Recommendation Message Styles */
+.recommendation-container {
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: rgba(18, 18, 18, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.verdict-heading {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--primary-color);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.recommendation-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-transform: none;
+    animation: none;
+}
+
+.recommendation-message.positive {
+    color: #4CAF50;
+}
+
+.recommendation-message.cautious {
+    color: #FFC107;
+}
+
+.recommendation-message i {
+    font-size: 1.8rem;
+}
