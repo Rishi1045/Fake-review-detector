@@ -4,7 +4,7 @@ import os
 from scraper import scrape_reviews_to_csv, convert_to_review_url, detect_ecommerce_platform
 from prediction_model import predict_fake_reviews
 
-app = Flask(_name_, static_folder=".", static_url_path="", template_folder="templates")
+app = Flask(__name__, static_folder=".", static_url_path="", template_folder="templates")
 
 @app.route("/")
 def index():
@@ -217,5 +217,5 @@ def analyze():
         print(f"Error in analyze endpoint: {e}")
         return jsonify({"error": str(e)}), 500
 
-if _name_ == "_main_":
-    app.run(debug=True, host='0.0.0.0', port=3000)
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=3000) 

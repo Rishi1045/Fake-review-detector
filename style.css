@@ -918,3 +918,101 @@ section {
         margin-bottom: 10px;
     }
 }
+
+/* Rating distribution styles */
+.rating-distribution {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.distribution-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.star-label {
+    width: 60px;
+    color: #fff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.star-label i {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.progress-bar-container {
+    flex: 1;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 15px;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+    min-width: 5px;
+}
+
+.rating-5-bar {
+    background-color: #4CAF50; /* Green */
+}
+
+.rating-4-bar {
+    background-color: #8BC34A; /* Light Green */
+}
+
+.rating-3-bar {
+    background-color: #FFC107; /* Amber */
+}
+
+.rating-2-bar {
+    background-color: #FF9800; /* Orange */
+}
+
+.rating-1-bar {
+    background-color: #F44336; /* Red */
+}
+
+.rating-count {
+    width: 40px;
+    text-align: right;
+    color: #bbb;
+    font-weight: 500;
+}
+
+@media (max-width: 576px) {
+    .star-label {
+        width: 40px;
+    }
+    
+    .rating-count {
+        width: 30px;
+    }
+    
+    .progress-bar-container {
+        margin: 0 10px;
+    }
+}
+
+/* Progress bar animation */
+.animate-bar {
+    animation: grow-bar 1s ease-out;
+}
+
+@keyframes grow-bar {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
