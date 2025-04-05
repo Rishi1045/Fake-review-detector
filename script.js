@@ -2,6 +2,37 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
 
+    // Global variables to store data for charts and filtering
+    let reviewData = [];
+    let ratingChart = null;
+
+    // Theme Switcher
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Initialize theme
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-theme');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        document.body.classList.remove('light-theme');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('light-theme')) {
+                document.body.classList.remove('light-theme');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.body.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+    }
+
 // Mobile Menu Toggle
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const mobileMenu = document.querySelector('.mobile-menu');
@@ -201,6 +232,9 @@ urlInput.addEventListener('input', () => {
                 const data = await response.json();
                 console.log('Response data:', data);
                 
+                // Store review data globally for filtering
+                reviewData = data.reviews || [];
+                
                 // Display results
                 displayResults(data);
                 
@@ -253,6 +287,12 @@ urlInput.addEventListener('input', () => {
         // Update rating distribution if available
         if (data.rating_distribution && Array.isArray(data.rating_distribution)) {
             updateRatingDistribution(data.rating_distribution);
+            
+            // Also update the chart visualization
+            updateRatingChart(data.rating_distribution);
+            
+            // Calculate and update sentiment analysis
+            updateSentimentAnalysis(data.reviews);
         }
         
         // Clear previous reviews
@@ -274,14 +314,32 @@ urlInput.addEventListener('input', () => {
                 const reviewEl = document.createElement('div');
                 reviewEl.className = 'review-item';
                 
+                // Set data attribute for filtering
+                let ratingValue = 0;
+                if (typeof review.rating === 'string') {
+                    // Extract numeric value from string like "4★"
+                    ratingValue = parseFloat(review.rating) || 0;
+                } else if (typeof review.rating === 'number') {
+                    ratingValue = review.rating;
+                }
+                reviewEl.setAttribute('data-rating', Math.round(ratingValue));
+                
                 let ratingDisplay = review.rating;
                 if (typeof ratingDisplay === 'string' && !ratingDisplay.includes('★')) {
                     ratingDisplay = ratingDisplay + '★';
                 }
                 
+                // Calculate sentiment class based on rating
+                let sentimentClass = 'neutral';
+                if (ratingValue >= 4) {
+                    sentimentClass = 'positive';
+                } else if (ratingValue <= 2) {
+                    sentimentClass = 'negative';
+                }
+                
                 reviewEl.innerHTML = `
                     <div class="review-header">
-                        <div class="review-rating">
+                        <div class="review-rating ${sentimentClass}">
                             <span>${ratingDisplay}</span>
                             <i class="fas fa-star"></i>
                         </div>
@@ -293,10 +351,16 @@ urlInput.addEventListener('input', () => {
                 `;
                 reviewList.appendChild(reviewEl);
             });
+            
+            // Initialize review filtering
+            initReviewFiltering();
         } else {
             reviewList.innerHTML = '<p class="no-reviews">No authentic reviews found.</p>';
             console.log('No reviews to display');
         }
+        
+        // Initialize export buttons
+        initExportButtons();
     }
 
     // Function to update star rating display
@@ -393,6 +457,258 @@ urlInput.addEventListener('input', () => {
                 console.error(`Count element for rating ${rating} not found`);
             }
         });
+    }
+
+    // NEW: Function to update rating chart visualization
+    function updateRatingChart(distributionData) {
+        const chartCanvas = document.getElementById('ratingChart');
+        if (!chartCanvas) {
+            console.error('Rating chart canvas not found');
+            return;
+        }
+        
+        // Extract data for chart
+        const labels = [];
+        const counts = [];
+        const backgroundColors = [
+            '#4CAF50', // 5 star - Green
+            '#8BC34A', // 4 star - Light Green
+            '#FFC107', // 3 star - Amber
+            '#FF9800', // 2 star - Orange
+            '#F44336'  // 1 star - Red
+        ];
+        
+        // Process in reverse to show 5 star first in chart
+        [...distributionData].reverse().forEach(item => {
+            labels.push(`${item.rating} Star`);
+            counts.push(item.count);
+        });
+        
+        // If Chart already exists, destroy it
+        if (ratingChart) {
+            ratingChart.destroy();
+        }
+        
+        // Create new chart
+        ratingChart = new Chart(chartCanvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Reviews',
+                    data: counts,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                return `${value} review${value !== 1 ? 's' : ''}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // NEW: Function to analyze sentiment based on ratings and keywords
+    function updateSentimentAnalysis(reviews) {
+        if (!reviews || reviews.length === 0) {
+            console.log('No reviews for sentiment analysis');
+            return;
+        }
+        
+        // Simple sentiment categorization based on ratings
+        let positive = 0;
+        let neutral = 0;
+        let negative = 0;
+        
+        reviews.forEach(review => {
+            let rating = 0;
+            
+            // Extract rating value
+            if (typeof review.rating === 'string') {
+                rating = parseFloat(review.rating) || 0;
+            } else if (typeof review.rating === 'number') {
+                rating = review.rating;
+            }
+            
+            // Categorize
+            if (rating >= 4) {
+                positive++;
+            } else if (rating <= 2) {
+                negative++;
+            } else {
+                neutral++;
+            }
+        });
+        
+        const total = reviews.length;
+        
+        // Calculate percentages
+        const positivePercentage = total > 0 ? (positive / total) * 100 : 0;
+        const neutralPercentage = total > 0 ? (neutral / total) * 100 : 0;
+        const negativePercentage = total > 0 ? (negative / total) * 100 : 0;
+        
+        console.log(`Sentiment analysis: Positive ${positivePercentage.toFixed(1)}%, Neutral ${neutralPercentage.toFixed(1)}%, Negative ${negativePercentage.toFixed(1)}%`);
+        
+        // Update UI
+        updateSentimentBar('positive', positivePercentage);
+        updateSentimentBar('neutral', neutralPercentage);
+        updateSentimentBar('negative', negativePercentage);
+        
+        // Update recommendation message based on positive sentiment percentage
+        updateRecommendation(positivePercentage);
+    }
+    
+    // Helper function to update sentiment bars
+    function updateSentimentBar(type, percentage) {
+        const bar = document.querySelector(`.${type}-bar`);
+        const percentageElement = document.querySelector(`.${type}-percentage`);
+        
+        if (bar) {
+            bar.style.width = `${percentage}%`;
+        }
+        
+        if (percentageElement) {
+            percentageElement.textContent = `${percentage.toFixed(1)}%`;
+        }
+    }
+    
+    // NEW: Helper function to update recommendation message
+    function updateRecommendation(positivePercentage) {
+        const recommendationText = document.getElementById('recommendation-text');
+        const recommendationMessage = document.querySelector('.recommendation-message');
+        
+        if (recommendationText && recommendationMessage) {
+            // Clear previous classes
+            recommendationMessage.classList.remove('positive', 'cautious');
+            
+            if (positivePercentage >= 60) {
+                recommendationText.textContent = "BUY IT! Return policy can be ignored";
+                recommendationMessage.classList.add('positive');
+                recommendationMessage.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                recommendationText.textContent = "Consider checking return policy first";
+                recommendationMessage.classList.add('cautious');
+                recommendationMessage.querySelector('i').className = 'fas fa-exclamation-circle';
+            }
+        } else {
+            console.error('Recommendation elements not found');
+        }
+    }
+    
+    // NEW: Initialize review filtering functionality
+    function initReviewFiltering() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('reviewSearch');
+        const reviewItems = document.querySelectorAll('.review-item');
+        
+        // Filter by rating
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const rating = button.getAttribute('data-rating');
+                
+                // Filter reviews
+                reviewItems.forEach(item => {
+                    if (rating === 'all' || item.getAttribute('data-rating') === rating) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search in reviews
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                reviewItems.forEach(item => {
+                    const reviewContent = item.textContent.toLowerCase();
+                    
+                    if (reviewContent.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+    }
+    
+    // NEW: Initialize export and share buttons
+    function initExportButtons() {
+        const exportPDFBtn = document.getElementById('exportPDF');
+        const saveImageBtn = document.getElementById('saveImage');
+        const shareBtn = document.getElementById('shareResults');
+        
+        if (exportPDFBtn) {
+            exportPDFBtn.addEventListener('click', () => {
+                alert('PDF export feature will be implemented soon!');
+                // In a real implementation, you would use a library like jsPDF
+            });
+        }
+        
+        if (saveImageBtn) {
+            saveImageBtn.addEventListener('click', () => {
+                alert('Image saving feature will be implemented soon!');
+                // In a real implementation, you would use html2canvas or similar
+            });
+        }
+        
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Review Analysis Results',
+                        text: 'Check out this review analysis I found!',
+                        url: window.location.href
+                    })
+                    .then(() => console.log('Successful share'))
+                    .catch((error) => console.log('Error sharing:', error));
+                } else {
+                    alert('Web Share API not supported in your browser');
+                }
+            });
+        }
     }
 
 // Add parallax effect to hero section
