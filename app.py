@@ -4,6 +4,34 @@ import os
 from scraper import scrape_reviews_to_csv, convert_to_review_url, detect_ecommerce_platform
 from prediction_model import predict_fake_reviews
 
+# Simple sentiment analysis without NLTK dependency
+def analyze_sentiment(text):
+    # Basic positive and negative word lists
+    positive_words = ['good', 'great', 'excellent', 'amazing', 'love', 'perfect', 'best', 'awesome', 'happy', 'recommend']
+    negative_words = ['bad', 'poor', 'terrible', 'awful', 'worst', 'hate', 'disappointing', 'disappointed', 'waste', 'avoid']
+    
+    if not isinstance(text, str) or not text.strip():
+        return 0, "neutral"
+    
+    text = text.lower()
+    
+    # Count occurrences
+    positive_count = sum(1 for word in positive_words if word in text)
+    negative_count = sum(1 for word in negative_words if word in text)
+    
+    # Calculate simple score (-1 to 1)
+    if positive_count > negative_count:
+        score = min(1.0, (positive_count - negative_count) / 5)
+        category = "positive"
+    elif negative_count > positive_count:
+        score = max(-1.0, (positive_count - negative_count) / 5)
+        category = "negative"
+    else:
+        score = 0
+        category = "neutral"
+    
+    return score, category
+
 app = Flask(__name__, static_folder=".", static_url_path="", template_folder="templates")
 
 @app.route("/")
@@ -79,6 +107,7 @@ def analyze():
             
             for _, row in real_reviews.iterrows():
                 rating_raw = row.get("Rating", "N/A")
+                description = row.get("Description", "No Description")
                 
                 # Process the rating for counting
                 try:
@@ -93,11 +122,16 @@ def analyze():
                 except Exception as e:
                     print(f"Error processing rating for count: {e}")
                 
-                # Add review to the list
+                # Perform simple sentiment analysis without NLTK
+                sentiment_score, sentiment_category = analyze_sentiment(description)
+                
+                # Add review to the list with sentiment data
                 review_data.append({
                     "rating": rating_raw,
                     "title": row.get("Review Title", "No Title"),
-                    "description": row.get("Description", "No Description")
+                    "description": description,
+                    "sentiment_score": sentiment_score,
+                    "sentiment": sentiment_category
                 })
             
             # Calculate average rating
@@ -224,11 +258,23 @@ def analyze():
                     middle_item["count"] = len(review_data)
                     print(f"Assigned {len(review_data)} counts to middle rating for visualization")
             
+            # Calculate overall sentiment distribution
+            sentiment_distribution = {
+                "positive": 0,
+                "neutral": 0,
+                "negative": 0
+            }
+            
+            for review in review_data:
+                sentiment = review.get("sentiment", "neutral")
+                sentiment_distribution[sentiment] += 1
+            
             return jsonify({
                 "success": True,
                 "average_rating": round(avg_rating, 1),
                 "total_ratings": total_ratings,
                 "rating_distribution": rating_distribution,
+                "sentiment_distribution": sentiment_distribution,
                 "reviews": review_data,
                 "total_reviews": len(review_data)
             })
