@@ -347,46 +347,48 @@ urlInput.addEventListener('input', () => {
     function updateRatingDistribution(distributionData) {
         console.log('Updating rating distribution with:', distributionData);
         
-        // Find the max count to normalize percentages if needed
-        let maxCount = 0;
+        // Log total for all ratings to check data
+        let totalReviews = 0;
         distributionData.forEach(item => {
-            if (item.count > maxCount) maxCount = item.count;
+            totalReviews += item.count;
         });
+        console.log(`Total reviews across all ratings: ${totalReviews}`);
         
         // Process each rating level
         distributionData.forEach(item => {
             const rating = item.rating;
             const count = item.count;
+            const percentage = item.percentage;
             
-            // Calculate percentage based on max count if all counts are 0
-            const usePercentage = item.percentage > 0 ? item.percentage : 0;
+            console.log(`Processing rating ${rating}: Count=${count}, Percentage=${percentage}%`);
             
-            // Ensure we show at least a small bar for ratings that have counts
-            const displayPercentage = count > 0 ? Math.max(5, usePercentage) : 0;
-            
-            console.log(`Rating ${rating}: Count=${count}, Percentage=${usePercentage}%, Display=${displayPercentage}%`);
-            
-            // Update the progress bar width
+            // Find the elements using the correct selectors
             const progressBar = document.querySelector(`.rating-${rating}-bar`);
+            const countElement = document.querySelector(`.rating-${rating}-count`);
+            
+            // Log element status
+            console.log(`Progress bar for rating ${rating} found:`, progressBar !== null);
+            console.log(`Count element for rating ${rating} found:`, countElement !== null);
+            
+            // Update progress bar width if element exists
             if (progressBar) {
-                // Set width directly
-                progressBar.style.width = `${displayPercentage}%`;
+                // Calculate display percentage (min 5% if there are any reviews)
+                const displayPercentage = count > 0 ? Math.max(5, percentage) : 0;
+                
+                // Directly set the width with !important to override any other styles
+                progressBar.setAttribute('style', `width: ${displayPercentage}% !important`);
+                console.log(`Set bar width for rating ${rating} to ${displayPercentage}%`);
                 
                 // Add animation class
                 progressBar.classList.add('animate-bar');
-                
-                // Special case: if all counts are 0 but we have reviews, show equal bars
-                if (maxCount === 0 && distributionData.some(d => d.count > 0)) {
-                    progressBar.style.width = '20%'; // Equal distribution
-                }
             } else {
                 console.error(`Progress bar element for rating ${rating} not found`);
             }
             
-            // Update the count
-            const countElement = document.querySelector(`.rating-${rating}-count`);
+            // Update the count text if element exists
             if (countElement) {
                 countElement.textContent = count;
+                console.log(`Set count for rating ${rating} to ${count}`);
             } else {
                 console.error(`Count element for rating ${rating} not found`);
             }
