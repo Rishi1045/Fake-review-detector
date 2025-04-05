@@ -72,9 +72,14 @@ This application integrates web scraping with AI-based fake review detection to 
 
 ## Demo
 
-<img width="1440" alt="Screenshot 2025-04-05 at 8 45 51 AM" src="https://github.com/user-attachments/assets/afbbeace-0467-4d7d-8876-a3f1c6f3894e" />
-<img width="1440" alt="Screenshot 2025-04-05 at 8 45 36 AM" src="https://github.com/user-attachments/assets/9fc60d9a-d246-4938-ba9a-df63dcdf454c" />
-<img width="1440" alt="Screenshot 2025-04-05 at 8 45 17 AM" src="https://github.com/user-attachments/assets/c7f4f2ae-0a22-415f-9219-5f7030b470dc" />
-<img width="1440" alt="Screenshot 2025-04-05 at 8 45 02 AM" src="https://github.com/user-attachments/assets/1e13392a-c5dd-494e-a207-511e5b9b56d4" />
-<img width="1440" alt="Screenshot 2025-04-05 at 8 44 45 AM" src="https://github.com/user-attachments/assets/f1ce6fd7-5712-4bba-8266-a85a83a4e445" />
-<img width="1440" alt="Screenshot 2025-04-05 at 8 42 29 AM" src="https://github.com/user-attachments/assets/85c75545-5d7a-4998-ba30-08054a65ca0b" />
+<img width="1440" alt="Screenshot 2025-04-05 at 8 42 29 AM" src="https://github.com/user-attachments/assets/bd2e0eb5-deda-49f8-bd6a-295d269622e6" />
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 44 45 AM" src="https://github.com/user-attachments/assets/32b00f2d-ddd4-408b-a8c5-c701d8eb1a99" />
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 02 AM" src="https://github.com/user-attachments/assets/3311f93e-29ee-4548-81a5-0e98e9c3928f" />
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 17 AM" src="https://github.com/user-attachments/assets/41344f9e-29fa-458d-8fb4-5127b2692071" />
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 36 AM" src="https://github.com/user-attachments/assets/fd657791-8cfe-4bd8-b5e9-fd7ddbb05bb4" />
+
+<img width="1440" alt="Screenshot 2025-04-05 at 8 45 51 AM" src="https://github.com/user-attachments/assets/39a9fab6-9854-4f9a-a139-aa62ef0c7f36" />
