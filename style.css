@@ -953,13 +953,17 @@ section {
     overflow: hidden;
     margin: 0 15px;
     position: relative;
+    z-index: 1;
 }
 
 .progress-bar {
     height: 100%;
     border-radius: 5px;
-    transition: width 0.5s ease;
+    transition: width 1s ease;
     min-width: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .rating-5-bar {
@@ -1005,14 +1009,11 @@ section {
 
 /* Progress bar animation */
 .animate-bar {
-    animation: grow-bar 1s ease-out;
+    animation: grow-bar 1.5s ease-out forwards;
 }
 
 @keyframes grow-bar {
     from {
-        width: 0;
-    }
-    to {
-        width: 100%;
+        width: 0 !important;
     }
 }
