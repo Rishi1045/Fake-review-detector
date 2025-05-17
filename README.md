@@ -5,7 +5,7 @@ This application integrates web scraping with AI-based fake review detection to 
 ## Features
 
 - Scrapes product reviews from e-commerce websites (Currently supports Flipkart)
-- Uses machine learning to detect and filter out fake reviews
+- Uses machine learning(ML) and natural language processing(NLP) to detect and filter out fake reviews
 - Does Sentimental Analysis
 - Displays only authentic reviews with ratings and details
 - Simple and intuitive user interface
